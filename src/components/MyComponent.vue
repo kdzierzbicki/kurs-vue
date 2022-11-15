@@ -2,31 +2,36 @@
 
   <div>
 
-    <button @click="SeyHello"> wciśnij aby się przywitać</button>
+  <h1>Price: {{price}}</h1>
+    <button @click="makeOrder">Make next order</button>
+
+    <p>quantity: {{quantity}}</p>
+    <p>Order total price: {{totalPrice}}</p>
+    <p>Tax: {{tax}}</p>
 
   </div>
 
 </template>
 
 <script>
+import {ref} from 'vue'
 export default {
   name: "MyComponent",
 
   setup() {
 
-      function SeyHello() {
+    const quantity = ref(0);
+    const price = ref(100);
+    const totalPrice = ref(0);
+    const tax = ref(0);
 
-        const welcometext = "siema, jak leci?";
+      function makeOrder(){
 
-        console.log(addExclamationMark(welcometext));
+        quantity.value++;
+        totalPrice.value = quantity.value * price.value;
+        tax.value = totalPrice.value * 0.23;
       }
-
-    function addExclamationMark(text){
-
-
-        return {text};
-    }
-        return {SeyHello};
+    return{makeOrder, quantity, price, totalPrice, tax,};
   }
 
   };
