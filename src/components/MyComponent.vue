@@ -1,47 +1,58 @@
 <template>
 
-  <div>
-  <!-- jeżeli używasz toReds piszemy wtedy zmienne bez state -->
-  <h1>Price: {{state.price}}$</h1>
-    <button @click="makeOrder">Make next order</button>
+  <!-- jeżeli używasz toReds piszemy wtedy zmienne bez state. State podajemy do zmiennych przy reactive-->
 
-    <p>quantity: {{state.quantity}}</p>
-    <p>Order total price: {{state.totalPrice}}</p>
-    <p>Tax: {{state.tax}}</p>
+  <div>
+
+<p> You have <strong>{{shares}} $</strong> shares and their value is <strong>{{sharesValue}} </strong> because share price is <strong>{{sharePrice}}</strong>$</p>
+
+  <button @click="changeNumberOfShares(1)">Buy one share</button>
+  <button @click="changeNumberOfShares(5)">Buy five shares</button>
+  <button @click="changeNumberOfShares(-1)">Sell one share</button>
+  <button @click="changeNumberOfShares(-5)">Sell five shares</button>
 
   </div>
 
 </template>
 
 <script>
-import {reactive} from 'vue'
-//import {reactive, toRefs} from 'vue'
+import {ref, computed, watch} from "vue";
+
 export default {
   name: "MyComponent",
 
   setup() {
 
-      const state = reactive({
+      const shares = ref(15);
+      const sharePrice = ref(20);
+      const sharesValue = computed(() => shares.value * sharePrice.value);
 
-        quantity: 0,
-        price: 100,
-        totalPrice: 0,
-        tax: 0,
-      });
 
-    function makeOrder(){
+      function changeNumberOfShares(number){
 
-      state.quantity++;
-      state.totalPrice = state.quantity * state.price;
-      state.tax= state.totalPrice * 0.23;
+        if (shares.value + number>=0 ){
+
+          shares.value += number;
+        }
+      }
+
+        watch(shares,(shares, prevShares) => {
+
+        shares > prevShares ? getPrice(1, 5) : getPrice(-5, -1)
+    });
+       function getPrice(min, max){
+
+       const priceDiff = Math.floor(Math.random() * (max - min) + min)
+         if(sharePrice.value + priceDiff >=0){
+
+           sharePrice.value += priceDiff;
+         }
+
+        }
+
+      return { shares, sharePrice, sharesValue, changeNumberOfShares};
     }
 
-
-
-    return{makeOrder, state};
-
-      //return{makeOrder, ...toRefs(state)};
-  }
 
   };
 
