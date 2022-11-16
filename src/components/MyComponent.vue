@@ -1,33 +1,58 @@
 <template>
 
+  <!-- jeżeli używasz toReds piszemy wtedy zmienne bez state. State podajemy do zmiennych przy reactive-->
+
   <div>
 
-    <button @click="SeyHello"> wciśnij aby się przywitać</button>
+<p> You have <strong>{{shares}} $</strong> shares and their value is <strong>{{sharesValue}} </strong> because share price is <strong>{{sharePrice}}</strong>$</p>
+
+  <button @click="changeNumberOfShares(1)">Buy one share</button>
+  <button @click="changeNumberOfShares(5)">Buy five shares</button>
+  <button @click="changeNumberOfShares(-1)">Sell one share</button>
+  <button @click="changeNumberOfShares(-5)">Sell five shares</button>
 
   </div>
 
 </template>
 
 <script>
+import {ref, computed, watch} from "vue";
+
 export default {
   name: "MyComponent",
 
   setup() {
 
-      function SeyHello() {
+      const shares = ref(15);
+      const sharePrice = ref(20);
+      const sharesValue = computed(() => shares.value * sharePrice.value);
 
-        const welcometext = "siema, jak leci?";
 
-        console.log(addExclamationMark(welcometext));
+      function changeNumberOfShares(number){
+
+        if (shares.value + number>=0 ){
+
+          shares.value += number;
+        }
       }
 
-    function addExclamationMark(text){
+        watch(shares,(shares, prevShares) => {
 
+        shares > prevShares ? getPrice(1, 5) : getPrice(-5, -1)
+    });
+       function getPrice(min, max){
 
-        return {text};
+       const priceDiff = Math.floor(Math.random() * (max - min) + min)
+         if(sharePrice.value + priceDiff >=0){
+
+           sharePrice.value += priceDiff;
+         }
+
+        }
+
+      return { shares, sharePrice, sharesValue, changeNumberOfShares};
     }
-        return {SeyHello};
-  }
+
 
   };
 
