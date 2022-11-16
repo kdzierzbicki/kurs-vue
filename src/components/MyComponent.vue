@@ -1,59 +1,35 @@
 <template>
 
-  <!-- jeżeli używasz toReds piszemy wtedy zmienne bez state. State podajemy do zmiennych przy reactive-->
+  <!-- jeżeli używasz toReds piszemy wtedy zmienne bez state. State podajemy do zmiennych przy reactive. Watch używamy to obserowania czegoś w konsoli-->
 
   <div>
-
-<p> You have <strong>{{shares}} $</strong> shares and their value is <strong>{{sharesValue}} </strong> because share price is <strong>{{sharePrice}}</strong>$</p>
-
-  <button @click="changeNumberOfShares(1)">Buy one share</button>
-  <button @click="changeNumberOfShares(5)">Buy five shares</button>
-  <button @click="changeNumberOfShares(-1)">Sell one share</button>
-  <button @click="changeNumberOfShares(-5)">Sell five shares</button>
+  <p> Masks: {{masks}}</p>
+    <p v-if="masks >3">You buy a mask</p>
+    <p v-else-if="masks > 0 && masks <= 3">You can buy a mask, but hurry up!</p>
+    <p v-else>You can't buy a mask, out of stock</p>
+    <button v-if="masks" @click="buyMasks">Buy a mask</button>
 
   </div>
 
 </template>
 
 <script>
-import {ref, computed, watch} from "vue";
+import {ref} from "vue";
 
 export default {
   name: "MyComponent",
 
   setup() {
 
-      const shares = ref(15);
-      const sharePrice = ref(20);
-      const sharesValue = computed(() => shares.value * sharePrice.value);
+      const masks = ref(5);
 
+      function buyMasks(){
+      masks.value--;
 
-      function changeNumberOfShares(number){
-
-        if (shares.value + number>=0 ){
-
-          shares.value += number;
-        }
       }
-
-        watch(shares,(shares, prevShares) => {
-
-        shares > prevShares ? getPrice(1, 5) : getPrice(-5, -1)
-    });
-       function getPrice(min, max){
-
-       const priceDiff = Math.floor(Math.random() * (max - min) + min)
-         if(sharePrice.value + priceDiff >=0){
-
-           sharePrice.value += priceDiff;
-         }
-
+      return {masks, buyMasks}
         }
-
-      return { shares, sharePrice, sharesValue, changeNumberOfShares};
-    }
 
 
   };
-
 </script>
